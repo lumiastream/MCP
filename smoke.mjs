@@ -17,6 +17,9 @@ console.log('TOOLS (' + tools.tools.length + '):', tools.tools.map((t) => t.name
 const resources = await client.listResources();
 console.log('RESOURCES:', resources.resources.map((r) => r.uri).join(', '));
 
+const prompts = await client.listPrompts();
+console.log('PROMPTS (' + prompts.prompts.length + '):', prompts.prompts.map((p) => p.name).sort().join(', '));
+
 const call = await client.callTool({ name: 'get_settings', arguments: {} });
 console.log('get_settings isError:', call.isError === true);
 console.log('get_settings text:', String(call.content?.[0]?.text ?? '').slice(0, 140));

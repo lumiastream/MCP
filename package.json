@@ -1,6 +1,6 @@
 {
 	"name": "@lumiastream/mcp",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Model Context Protocol server for Lumia Stream",
 	"type": "module",
 	"bin": {
@@ -17,7 +17,8 @@
 		"dev": "tsc --watch",
 		"start": "node dist/index.js",
 		"typecheck": "tsc --noEmit",
-		"smoke": "node smoke.mjs"
+		"smoke": "node smoke.mjs",
+		"prepublishOnly": "npm run build"
 	},
 	"keywords": [
 		"lumiastream",
@@ -25,6 +26,18 @@
 		"model-context-protocol"
 	],
 	"license": "MIT",
+	"author": "Lumia Stream",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/lumiastream/mcp.git"
+	},
+	"homepage": "https://dev.lumiastream.com/docs/mcp/setup",
+	"bugs": {
+		"url": "https://github.com/lumiastream/mcp/issues"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"dependencies": {
 		"@modelcontextprotocol/sdk": "^1.29.0",
 		"zod": "^4.4.3"

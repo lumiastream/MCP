@@ -1,8 +1,8 @@
 # @lumiastream/mcp
 
-A [Model Context Protocol](https://modelcontextprotocol.io) server for [Lumia Stream](https://lumiastream.com). It exposes Lumia's local REST API as MCP tools so an AI assistant (Claude Desktop, Claude Code, Cursor, etc.) can trigger commands, set light colors, fire alerts, run TTS, and read/write variables.
+A [Model Context Protocol](https://modelcontextprotocol.io) server for [Lumia Stream](https://lumiastream.com). It exposes Lumia's local API as MCP tools so an AI assistant (Claude Desktop, Claude Code, Cursor, etc.) can control lights, trigger commands and alerts, run TTS, post to and moderate chat, read live stream state, and react to events in real time.
 
-It is a thin adapter over the local Lumia API (`http://localhost:39231/api`) — the app does all the real work.
+It is a thin adapter over the local Lumia API (`http://localhost:39231/api`) plus its event WebSocket — the app does all the real work.
 
 ## Prerequisites
 
@@ -12,16 +12,41 @@ It is a thin adapter over the local Lumia API (`http://localhost:39231/api`) —
 
 ## Tools
 
-| Tool | Description |
-| --- | --- |
-| `get_settings` | Discover what the user actually has: commands, alerts, connected lights, studio scenes/themes/animations, TTS voices. Call this first. |
-| `trigger_command` | Run a chat / chatbot / Twitch-points / Twitch-extension command by name. |
-| `set_color` | Set light color by hex, rgb, or color temperature (with brightness/transition/duration). |
-| `trigger_alert` | Simulate a platform alert (e.g. `twitch-follower`, `kofi-donation`). |
-| `get_variable` / `set_variable` | Read or write a Lumia variable. |
-| `speak` | Text-to-speech through Lumia's engine. |
+**Discover & state**
+- `get_settings` — commands, alerts, connected lights, studio scenes/themes/animations, TTS voices. Call this first.
+- `get_state` — snapshot: live status, viewers, follower/subscriber counts, latest names, now-playing song, heart rate.
+- `get_variable` / `get_variables` / `set_variable` — read one or many Lumia variables, or write one.
 
-There is also a `lumia://settings` **resource** mirroring `get_settings` for clients that read resources as context.
+**Lights & studio**
+- `set_color` — hex, RGB, or color temperature, with brightness/transition/duration.
+- `set_studio` — trigger a studio scene, theme, or animation.
+- `set_lumia_state` — start/stop/toggle Lumia, or reset lights to default.
+
+**Trigger commands & alerts**
+- `trigger_command` — chat / chatbot / Twitch-points / Twitch-extension command by name.
+- `trigger_alert` — simulate a platform alert (e.g. `twitch-follower`, `kofi-donation`).
+
+**Chat, voice & moderation**
+- `send_chat_message` — post to chat as the bot or as yourself.
+- `speak` — text-to-speech through Lumia's engine.
+- `shoutout` — clip + chat shoutout for a user.
+- `moderate_user` — ban / unban / timeout / VIP.
+- `delete_message` — remove a message by id.
+- `translate_message` — translate and post to chat.
+
+**Overlays, session & economy**
+- `control_overlay` — show/hide overlays and layers, move layers, set content.
+- `set_stream_mode` — stream mode on/off/toggle.
+- `control_queue` — pause/resume/clear the queue, clear cooldowns.
+- `set_command_state` — enable/disable a command or folder.
+- `control_fuze` — start/stop/toggle Fuze, set audio sensitivity.
+- `loyalty_points` — add or remove a viewer's loyalty points.
+
+**Real-time**
+- `get_recent_events` — recent live events (chat, follows, subs, bits, raids, donations) since the server started.
+- `wait_for_event` — block until the next matching event (e.g. the next follower), then react.
+
+Also a `lumia://settings` **resource** mirroring `get_settings`, and **prompts** (slash-commands in most clients): `start_stream`, `brb`, `hype`, `wind_down`, `thank_new_followers`.
 
 ## Configuration
 
@@ -86,7 +111,7 @@ LUMIA_TOKEN=your_token_here npm run smoke
 
 ## Adding a tool
 
-Each `type` in the Lumia [Send API](https://developer.lumiastream.com/docs/rest) maps to a tool. To add one:
+Each `type` in the Lumia [Send API](https://dev.lumiastream.com/docs/rest) maps to a tool. To add one:
 
 1. Create `src/tools/<name>.ts` exporting `register<Name>(server, client)` — copy an existing file.
 2. Define the `inputSchema` (zod) and map inputs to `client.send('<type>', params)`.
