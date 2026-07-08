@@ -1,10 +1,30 @@
 {
 	"name": "@lumiastream/mcp",
-	"version": "0.2.0",
+	"version": "0.4.0",
 	"description": "Model Context Protocol server for Lumia Stream",
 	"type": "module",
+	"main": "dist/server.js",
+	"types": "dist/server.d.ts",
 	"bin": {
 		"lumia-mcp": "dist/index.js"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/server.d.ts",
+			"default": "./dist/server.js"
+		},
+		"./eventStream": {
+			"types": "./dist/eventStream.d.ts",
+			"default": "./dist/eventStream.js"
+		},
+		"./client": {
+			"types": "./dist/client.d.ts",
+			"default": "./dist/client.js"
+		},
+		"./config": {
+			"types": "./dist/config.d.ts",
+			"default": "./dist/config.js"
+		}
 	},
 	"files": [
 		"dist"

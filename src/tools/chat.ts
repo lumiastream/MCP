@@ -34,7 +34,7 @@ export function registerChat(server: McpServer, client: LumiaClient): void {
 			description: `Shout out a user: finds a clip of them if possible, shows it on your overlays, and posts a shoutout in chat.`,
 			inputSchema: {
 				username: z.string().describe('The user to shout out.'),
-				platform: z.enum(['twitch', 'youtube', 'facebook', 'kick']).default('twitch').describe('The platform the user is on.'),
+				platform: z.enum(['twitch', 'youtube', 'kick']).default('twitch').describe('The platform the user is on.'),
 			},
 			annotations: { readOnlyHint: false, openWorldHint: true },
 		},

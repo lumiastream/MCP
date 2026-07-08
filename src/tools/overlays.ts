@@ -8,18 +8,20 @@ export function registerOverlays(server: McpServer, client: LumiaClient): void {
 		'control_overlay',
 		{
 			title: 'Control an overlay',
-			description: `Show or hide an overlay or a layer, move a layer, or set a layer's content. "target" is the overlay name/uuid for the "visibility" action, or the layer id for the layer actions (both are found in Lumia's overlay settings).`,
+			description: `Show or hide an overlay or a layer, move or resize a layer, or set a layer's content. "target" is the overlay name/uuid for the "visibility" action, or the layer id for the layer actions (both are found in Lumia's overlay settings).`,
 			inputSchema: {
-				action: z.enum(['visibility', 'layer-visibility', 'layer-position', 'content']).describe('What to change.'),
+				action: z.enum(['visibility', 'layer-visibility', 'layer-position', 'layer-size', 'content']).describe('What to change.'),
 				target: z.string().describe('Overlay name/uuid for "visibility"; layer id for the layer actions.'),
 				visible: z.boolean().optional().describe('For "visibility"/"layer-visibility": show (true) or hide (false).'),
 				x: z.number().optional().describe('For "layer-position": X position.'),
 				y: z.number().optional().describe('For "layer-position": Y position.'),
+				width: z.number().optional().describe('For "layer-size": width in pixels.'),
+				height: z.number().optional().describe('For "layer-size": height in pixels.'),
 				content: z.string().optional().describe('For "content": the new content value.'),
 			},
 			annotations: { readOnlyHint: false, openWorldHint: true },
 		},
-		async ({ action, target, visible, x, y, content }) => {
+		async ({ action, target, visible, x, y, width, height, content }) => {
 			try {
 				const params: Record<string, unknown> = { layer: target };
 				let type: string;
@@ -31,8 +33,18 @@ export function registerOverlays(server: McpServer, client: LumiaClient): void {
 					params.value = visible ?? true;
 				} else if (action === 'layer-position') {
 					type = 'overlay-set-layer-position';
-					if (x !== undefined) params.x = x;
-					if (y !== undefined) params.y = y;
+					if (x === undefined || y === undefined) {
+						return toError(new Error('layer-position requires both x and y.'));
+					}
+					params.x = x;
+					params.y = y;
+				} else if (action === 'layer-size') {
+					type = 'overlay-set-layer-size';
+					if (width === undefined || height === undefined) {
+						return toError(new Error('layer-size requires both width and height.'));
+					}
+					params.width = width;
+					params.height = height;
 				} else {
 					type = 'overlay-set-content';
 					params.content = content ?? '';

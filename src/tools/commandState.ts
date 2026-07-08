@@ -8,18 +8,24 @@ export function registerCommandState(server: McpServer, client: LumiaClient): vo
 		'set_command_state',
 		{
 			title: 'Enable/disable a command or folder',
-			description: `Enable or disable a command, or a whole command folder, by name.`,
+			description: `Enable or disable a command, or a whole command folder, by name. For commands, "kind" picks which list the name belongs to (chat, chatbot, Twitch channel points, Kick points, or Twitch extension); points/extension kinds also sync the platform-side reward state on an up-to-date Lumia Stream.`,
 			inputSchema: {
 				target: z.enum(['command', 'folder']).default('command').describe('Whether "name" refers to a command or a folder.'),
+				kind: z
+					.enum(['chat', 'chatbot', 'twitch-points', 'kick-points', 'twitch-extension'])
+					.default('chat')
+					.describe('For target "command": which command list the name belongs to.'),
 				name: z.string().describe('The command or folder name.'),
 				enabled: z.boolean().describe('true to enable, false to disable.'),
 			},
 			annotations: { readOnlyHint: false, openWorldHint: true },
 		},
-		async ({ target, name, enabled }) => {
+		async ({ target, kind, name, enabled }) => {
 			try {
-				const type = target === 'folder' ? 'set-folder-state' : 'set-command-state';
-				return toResult(await client.send(type, { name, value: enabled }));
+				if (target === 'folder') {
+					return toResult(await client.send('set-folder-state', { name, value: enabled }));
+				}
+				return toResult(await client.send('set-command-state', { name, value: enabled, kind }));
 			} catch (error) {
 				return toError(error);
 			}

@@ -16,7 +16,9 @@ export function registerVariables(server: McpServer, client: LumiaClient): void 
 		},
 		async ({ name }) => {
 			try {
-				return toResult(await client.send('get-variable-value', { name }));
+				const res = await client.send('get-variable-value', { name });
+				const value = (res as { message?: unknown }).message ?? null;
+				return toResult({ name, value });
 			} catch (error) {
 				return toError(error);
 			}
@@ -37,6 +39,26 @@ export function registerVariables(server: McpServer, client: LumiaClient): void 
 		async ({ name, value }) => {
 			try {
 				return toResult(await client.send('update-variable-value', { name, value }));
+			} catch (error) {
+				return toError(error);
+			}
+		},
+	);
+
+	server.registerTool(
+		'set_counter',
+		{
+			title: 'Set a counter',
+			description: `Set a counter variable to an exact numeric value, e.g. reset a death counter to 0. Creates the counter if it doesn't exist yet.`,
+			inputSchema: {
+				name: z.string().describe('The counter variable name, e.g. "deaths".'),
+				value: z.number().describe('The exact value to set it to.'),
+			},
+			annotations: { readOnlyHint: false },
+		},
+		async ({ name, value }) => {
+			try {
+				return toResult(await client.send('set-counter-value', { name, value }));
 			} catch (error) {
 				return toError(error);
 			}

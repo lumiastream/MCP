@@ -10,7 +10,7 @@ export class LumiaClient {
 	constructor(private readonly config: LumiaConfig) {}
 
 	async retrieve(): Promise<Record<string, unknown>> {
-		return this.request('GET', '/retrieve') as Promise<Record<string, unknown>>;
+		return this.request('GET', '/retrieve?slim=true') as Promise<Record<string, unknown>>;
 	}
 
 	async send(type: string, params: Record<string, unknown> = {}): Promise<SendResponse> {

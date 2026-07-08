@@ -34,8 +34,25 @@ It is a thin adapter over the local Lumia API (`http://localhost:39231/api`) plu
 - `delete_message` — remove a message by id.
 - `translate_message` — translate and post to chat.
 
+**Stream management**
+- `set_stream_info` — change the stream title and/or category (Twitch, Kick).
+- `create_clip` — create a Twitch clip; its id/url land in the `twitch_last_clip_*` variables.
+- `create_stream_marker` — mark the current moment of the Twitch broadcast.
+- `send_announcement` — highlighted Twitch chat announcement.
+- `run_commercial` — run a Twitch ad break (30–180 seconds).
+- `set_chat_mode` — toggle Twitch slow / subscriber-only / follower-only / emote-only chat.
+- `create_poll` / `end_poll` — start a Twitch poll; end it (archive, or terminate leaving it visible).
+- `create_prediction` / `end_prediction` — start a Twitch prediction; resolve it with the winning outcome, or cancel and refund.
+- `clear_chat` — clear Twitch chat for everyone.
+- `pin_message` — pin or unpin a Twitch chat message.
+- `manage_moderator` — grant or revoke Twitch moderator.
+- `control_song_request` — add/skip/play/pause/remove/clear song requests.
+- `get_loyalty_points` — read a viewer's loyalty points balance.
+- `set_counter` — set a counter variable to an exact value.
+- `manage_chatbot_command` — create/update/delete a chatbot command (unlimited on every plan).
+
 **Overlays, session & economy**
-- `control_overlay` — show/hide overlays and layers, move layers, set content.
+- `control_overlay` — show/hide overlays and layers, move and resize layers, set content.
 - `set_stream_mode` — stream mode on/off/toggle.
 - `control_queue` — pause/resume/clear the queue, clear cooldowns.
 - `set_command_state` — enable/disable a command or folder.
@@ -76,6 +93,8 @@ Once published, point your client at it via `npx`:
 	}
 }
 ```
+
+Step-by-step instructions for each client (Claude Desktop, Claude Code, Cursor, Codex, VS Code, Windsurf, Gemini CLI) are in the [setup guide](https://dev.lumiastream.com/docs/mcp/setup).
 
 ### Local development
 

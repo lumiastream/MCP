@@ -14,7 +14,7 @@ export function registerStudio(server: McpServer, client: LumiaClient): void {
 			inputSchema: {
 				kind: z.enum(['scene', 'theme', 'animation']).describe('Which studio item to trigger.'),
 				name: z.string().describe('The scene/theme/animation name, e.g. "snow" or "breathe".'),
-				duration: z.number().min(0).optional().describe('Duration in milliseconds. Omit to use the default.'),
+				duration: z.number().min(0).optional().describe('Duration in milliseconds for scenes and themes. Animations currently ignore it.'),
 			},
 			annotations: { readOnlyHint: false, openWorldHint: true },
 		},
