@@ -8,7 +8,7 @@ export function registerSongRequests(server: McpServer, client: LumiaClient): vo
 		'control_song_request',
 		{
 			title: 'Control song requests',
-			description: `Control the song request queue (plays through Spotify). "add" queues a song by search query or link; "skip" jumps to the next song; "play"/"pause" control playback; "remove" drops a request (the last one, or a specific id); "clear" empties the whole queue.`,
+			description: `Control the song request queue (plays through the configured source — Spotify or a song-source plugin). "add" queues a song by search query or link; "skip" jumps to the next song; "play"/"pause" control playback when the source supports it; "remove" drops a request (the last one, or a specific id); "clear" empties the whole queue.`,
 			inputSchema: {
 				action: z.enum(['add', 'skip', 'play', 'pause', 'remove', 'clear']).describe('What to do.'),
 				query: z.string().optional().describe('For "add": the song to search for, or a Spotify link.'),
