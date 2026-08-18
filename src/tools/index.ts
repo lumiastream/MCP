@@ -1,5 +1,6 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { LumiaClient } from '../client.js';
+import { registerActions } from './actions.js';
 import { registerAlerts } from './alerts.js';
 import { registerChat } from './chat.js';
 import { registerColor } from './color.js';
@@ -23,6 +24,7 @@ import { registerVariables } from './variables.js';
 export function registerTools(server: McpServer, client: LumiaClient): void {
 	registerSettings(server, client);
 	registerCommands(server, client);
+	registerActions(server, client);
 	registerColor(server, client);
 	registerAlerts(server, client);
 	registerVariables(server, client);
