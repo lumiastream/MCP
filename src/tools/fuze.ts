@@ -8,7 +8,7 @@ export function registerFuze(server: McpServer, client: LumiaClient): void {
 		'control_fuze',
 		{
 			title: 'Control Fuze',
-			description: `Start, stop, or toggle Fuze, or set its audio sensitivity (a value below 100 makes it less sensitive).`,
+			description: `Start, stop, or toggle Fuze, or set its audio sensitivity (a value below 100 makes it less sensitive). Sensitivity has no effect in Effects mode, which sets its levels automatically.`,
 			inputSchema: {
 				action: z.enum(['start', 'stop', 'toggle', 'sensitivity']).describe('Fuze action.'),
 				sensitivity: z.number().min(0).optional().describe('For action "sensitivity": the value to set, e.g. 50.'),
